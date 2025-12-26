@@ -8,13 +8,14 @@ import DeliverySection from '@/components/sections/DeliverySection';
 import AboutSection from '@/components/sections/AboutSection';
 import ContactsSection from '@/components/sections/ContactsSection';
 import ProductDetail from '@/components/ProductDetail';
-import { Product, CartItem, products } from '@/types/product';
+import { Product, CartItem, Review, products } from '@/types/product';
 
 export default function Index() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [activeSection, setActiveSection] = useState('home');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [productList, setProductList] = useState<Product[]>(products);
 
   const addToCart = (product: Product) => {
     setCart(prevCart => {
@@ -48,9 +49,47 @@ export default function Index() {
     return cart.reduce((total, item) => total + item.price * item.quantity, 0);
   };
 
+  const addReview = (productId: number, reviewData: Omit<Review, 'id' | 'date'>) => {
+    setProductList(prevProducts => 
+      prevProducts.map(product => {
+        if (product.id === productId) {
+          const newReview: Review = {
+            id: product.reviews.length > 0 
+              ? Math.max(...product.reviews.map(r => r.id)) + 1 
+              : 1,
+            ...reviewData,
+            date: new Date().toISOString().split('T')[0]
+          };
+          return {
+            ...product,
+            reviews: [...product.reviews, newReview]
+          };
+        }
+        return product;
+      })
+    );
+
+    if (selectedProduct && selectedProduct.id === productId) {
+      setSelectedProduct(prevProduct => {
+        if (!prevProduct) return null;
+        const newReview: Review = {
+          id: prevProduct.reviews.length > 0 
+            ? Math.max(...prevProduct.reviews.map(r => r.id)) + 1 
+            : 1,
+          ...reviewData,
+          date: new Date().toISOString().split('T')[0]
+        };
+        return {
+          ...prevProduct,
+          reviews: [...prevProduct.reviews, newReview]
+        };
+      });
+    }
+  };
+
   const filteredProducts = selectedCategory === 'all'
-    ? products
-    : products.filter(p => p.category === selectedCategory);
+    ? productList
+    : productList.filter(p => p.category === selectedCategory);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
@@ -94,6 +133,7 @@ export default function Index() {
           product={selectedProduct}
           onClose={() => setSelectedProduct(null)}
           onAddToCart={addToCart}
+          onAddReview={addReview}
         />
       )}
 

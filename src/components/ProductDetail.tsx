@@ -1,20 +1,30 @@
-import { Product } from '@/types/product';
+import { useState } from 'react';
+import { Product, Review } from '@/types/product';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import Icon from '@/components/ui/icon';
+import ReviewForm from '@/components/ReviewForm';
 
 interface ProductDetailProps {
   product: Product;
   onClose: () => void;
   onAddToCart: (product: Product) => void;
+  onAddReview: (productId: number, review: Omit<Review, 'id' | 'date'>) => void;
 }
 
-export default function ProductDetail({ product, onClose, onAddToCart }: ProductDetailProps) {
+export default function ProductDetail({ product, onClose, onAddToCart, onAddReview }: ProductDetailProps) {
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  
   const averageRating = product.reviews.length > 0
     ? (product.reviews.reduce((sum, review) => sum + review.rating, 0) / product.reviews.length).toFixed(1)
     : 0;
+
+  const handleReviewSubmit = (review: { author: string; rating: number; comment: string }) => {
+    onAddReview(product.id, review);
+    setShowReviewForm(false);
+  };
 
   return (
     <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm overflow-y-auto">
@@ -113,7 +123,7 @@ export default function ProductDetail({ product, onClose, onAddToCart }: Product
 
             <Separator className="my-8" />
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
               <Card>
                 <CardHeader>
                   <CardTitle>Характеристики</CardTitle>
@@ -132,7 +142,17 @@ export default function ProductDetail({ product, onClose, onAddToCart }: Product
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Отзывы ({product.reviews.length})</CardTitle>
+                  <div className="flex items-center justify-between">
+                    <CardTitle>Отзывы ({product.reviews.length})</CardTitle>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => setShowReviewForm(!showReviewForm)}
+                    >
+                      <Icon name="Plus" className="h-4 w-4 mr-1" />
+                      Добавить
+                    </Button>
+                  </div>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4 max-h-96 overflow-y-auto">
@@ -164,12 +184,19 @@ export default function ProductDetail({ product, onClose, onAddToCart }: Product
                         </div>
                       ))
                     ) : (
-                      <p className="text-center text-muted-foreground py-8">Отзывов пока нет</p>
+                      <p className="text-center text-muted-foreground py-8">Отзывов пока нет. Будьте первым!</p>
                     )}
                   </div>
                 </CardContent>
               </Card>
             </div>
+
+            {showReviewForm && (
+              <ReviewForm 
+                productId={product.id} 
+                onSubmit={handleReviewSubmit}
+              />
+            )}
           </div>
         </div>
       </div>
