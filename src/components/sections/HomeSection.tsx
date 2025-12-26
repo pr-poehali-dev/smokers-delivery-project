@@ -7,9 +7,10 @@ import { Product, products } from '@/types/product';
 interface HomeSectionProps {
   setActiveSection: (section: string) => void;
   addToCart: (product: Product) => void;
+  onViewDetails: (product: Product) => void;
 }
 
-export default function HomeSection({ setActiveSection, addToCart }: HomeSectionProps) {
+export default function HomeSection({ setActiveSection, addToCart, onViewDetails }: HomeSectionProps) {
   return (
     <div className="space-y-16 animate-fade-in">
       <section className="relative py-20 overflow-hidden rounded-3xl bg-gradient-to-br from-primary/10 via-secondary/10 to-primary/5">
@@ -37,6 +38,7 @@ export default function HomeSection({ setActiveSection, addToCart }: HomeSection
               key={product.id} 
               product={product} 
               onAddToCart={addToCart}
+              onViewDetails={onViewDetails}
               index={index}
             />
           ))}

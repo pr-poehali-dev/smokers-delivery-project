@@ -7,13 +7,15 @@ interface CatalogSectionProps {
   selectedCategory: string;
   setSelectedCategory: (category: string) => void;
   addToCart: (product: Product) => void;
+  onViewDetails: (product: Product) => void;
 }
 
 export default function CatalogSection({ 
   filteredProducts, 
   selectedCategory, 
   setSelectedCategory, 
-  addToCart 
+  addToCart,
+  onViewDetails
 }: CatalogSectionProps) {
   return (
     <div className="space-y-8 animate-fade-in">
@@ -37,6 +39,7 @@ export default function CatalogSection({
             key={product.id} 
             product={product} 
             onAddToCart={addToCart}
+            onViewDetails={onViewDetails}
             index={index}
           />
         ))}

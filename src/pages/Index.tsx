@@ -7,12 +7,14 @@ import CatalogSection from '@/components/sections/CatalogSection';
 import DeliverySection from '@/components/sections/DeliverySection';
 import AboutSection from '@/components/sections/AboutSection';
 import ContactsSection from '@/components/sections/ContactsSection';
+import ProductDetail from '@/components/ProductDetail';
 import { Product, CartItem, products } from '@/types/product';
 
 export default function Index() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [activeSection, setActiveSection] = useState('home');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   const addToCart = (product: Product) => {
     setCart(prevCart => {
@@ -66,6 +68,7 @@ export default function Index() {
           <HomeSection 
             setActiveSection={setActiveSection}
             addToCart={addToCart}
+            onViewDetails={setSelectedProduct}
           />
         )}
 
@@ -75,6 +78,7 @@ export default function Index() {
             selectedCategory={selectedCategory}
             setSelectedCategory={setSelectedCategory}
             addToCart={addToCart}
+            onViewDetails={setSelectedProduct}
           />
         )}
 
@@ -84,6 +88,14 @@ export default function Index() {
 
         {activeSection === 'contacts' && <ContactsSection />}
       </main>
+
+      {selectedProduct && (
+        <ProductDetail
+          product={selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+          onAddToCart={addToCart}
+        />
+      )}
 
       <footer className="mt-20 border-t bg-muted/30">
         <div className="container mx-auto px-4 py-8">
