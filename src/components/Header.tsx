@@ -28,7 +28,7 @@ export default function Header({
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Icon name="Flame" className="h-8 w-8 text-primary" />
-          <h1 className="text-2xl font-bold font-heading bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">ЖарОк</h1>
+          <h1 className="text-2xl font-bold font-heading bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"> Мангалы ЖарОк</h1>
         </div>
 
         <nav className="hidden md:flex items-center gap-6">
