@@ -90,7 +90,7 @@ export default function Index() {
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="flex items-center gap-2">
               <Icon name="Flame" className="h-6 w-6 text-primary" />
-              <span className="font-bold font-heading">ГрильМастер</span>
+              <span className="font-bold font-heading">Hot-Ok</span>
             </div>
             <p className="text-sm text-muted-foreground">
               © 2024 ГрильМастер. Все права защищены.
